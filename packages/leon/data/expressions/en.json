@@ -90,5 +90,13 @@
         "Do you have something to say about Google Assistant?"
       ]
     }
+  },
+  "help": {
+    "run": {
+      "expressions": [
+        "What can you do?",
+        "How can you help me?"
+      ]
+    }
   }
 }

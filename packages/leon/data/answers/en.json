@@ -107,5 +107,12 @@
       "I don't know this personal assistant.",
       "I never met this personal assistant."
     ]
+  },
+  "help": {
+    "help": [
+      "You can find my capabilities <a href='https://github.com/leon-ai/leon/tree/develop/packages'>here.</a>",
+      "I can do many things! You can see them <a href='https://github.com/leon-ai/leon/tree/develop/packages'>here.</a>",
+      "You'd be amazed. <a href='https://github.com/leon-ai/leon/tree/develop/packages'>Check it out.</a>"
+    ]
   }
 }
