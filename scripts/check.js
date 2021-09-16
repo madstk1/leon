@@ -16,6 +16,11 @@ export default () => new Promise(async (resolve, reject) => {
     const nodeMinRequiredVersion = '10'
     const npmMinRequiredVersion = '5'
     const pythonMinRequiredVersion = '3'
+    const envPath = '.env'
+    const envLangValues = ['en-US', 'fr-FR']
+    const envEnvValues = ['development', 'testing', 'production']
+    const envSttProviderValues = ['deepspeech', 'google-cloud-stt', 'watson-stt']
+    const envTtsProviderValues = ['flite', 'amazon-polly', 'google-cloud-tts', 'watson-tts']
     const flitePath = 'bin/flite/flite'
     const deepSpeechPath = 'bin/deepspeech/lm.binary'
     const amazonPath = 'server/src/config/voice/amazon.json'
@@ -37,6 +42,37 @@ export default () => new Promise(async (resolve, reject) => {
     }
 
     log.title('Checking');
+
+    // .env checking
+    // Currently, missing PIPENV_PIPFILE, PIPENV_VENV_IN_PROJECT, LEON_TIME_ZONE and LEON_HOST validation
+
+    log.info('.env validity')
+    if (!fs.existsSync(envPath)) {
+      report.can_run.v = false
+      log.error('.env file not found or broken\n')
+    } else {
+      if(process.env.LEON_LANG && envLangValues.indexOf(process.env.LEON_LANG) == -1) {
+        log.error(`LEON_LANG is not a valid value: ${process.env.LEON_LANG}, valid values are ${envLangValues}\n`)
+      } else if(process.env.LEON_NODE_ENV && envEnvValues.indexOf(process.env.LEON_NODE_ENV) == -1) {
+        log.error(`LEON_NODE_ENV is not a valid value: ${process.env.LEON_NODE_ENV}, valid values are ${envEnvValues}\n`)
+      } else if(process.env.LEON_PORT && typeof(process.env.LEON_PORT) === 'number') {
+        log.error(`LEON_PORT is not a valid value: ${process.env.LEON_PORT}, must be a number\n`)
+      } else if(process.env.LEON_AFTER_SPEECH && typeof(process.env.LEON_AFTER_SPEECH) === 'boolean') {
+        log.error(`LEON_AFTER_SPEECH is not a valid value: ${process.env.LEON_AFTER_SPEECH}, must be a boolean\n`)
+      } else if(process.env.LEON_STT && typeof(process.env.LEON_STT) === 'boolean') {
+        log.error(`LEON_STT is not a valid value: ${process.env.LEON_STT}, must be a boolean\n`)
+      } else if(process.env.LEON_STT_PROVIDER && envSttProviderValues.indexOf(process.env.LEON_STT_PROVIDER) == -1) {
+        log.error(`LEON_STT_PROVIDER is not a valid value: ${process.env.LEON_STT_PROVIDER}, valid values are ${envSttProviderValues}\n`)
+      } else if(process.env.LEON_TTS && typeof(process.env.LEON_TTS) === 'boolean') {
+        log.error(`LEON_STT is not a valid value: ${process.env.LEON_STT}, must be a boolean\n`)
+      } else if(process.env.LEON_TTS_PROVIDER && envTtsProviderValues.indexOf(process.env.LEON_TTS_PROVIDER) == -1) {
+        log.error(`LEON_TTS_PROVIDER is not a valid value: ${process.env.LEON_TTS_PROVIDER}, valid values are ${envTtsProviderValues}\n`)
+      } else if(process.env.LEON_LOGGER && typeof(process.env.LEON_LOGGER) === 'boolean') {
+        log.error(`LEON_LOGGER is not a valid value: ${process.env.LEON_LOGGER}, must be a boolean\n`)
+      } else {
+        log.success('Found and valid\n')
+      }
+    }
 
     // Environment checking
 
