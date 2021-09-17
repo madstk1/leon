@@ -41,36 +41,65 @@ export default () => new Promise(async (resolve, reject) => {
       can_offline_stt: { title: 'Offline speech-to-text', type: 'warning', v: true }
     }
 
-    log.title('Checking');
+    log.title('Checking')
 
     // .env checking
-    // Currently, missing PIPENV_PIPFILE, PIPENV_VENV_IN_PROJECT, LEON_TIME_ZONE and LEON_HOST validation
+    // Currently, missing validation for:
+    // - PIPENV_PIPFILE
+    // - PIPENV_VENV_IN_PROJECT
+    // - LEON_TIME_ZONE
+    // - LEON_HOST
 
     log.info('.env validity')
     if (!fs.existsSync(envPath)) {
       report.can_run.v = false
       log.error('.env file not found or broken\n')
     } else {
-      if(process.env.LEON_LANG && envLangValues.indexOf(process.env.LEON_LANG) == -1) {
-        log.error(`LEON_LANG is not a valid value: ${process.env.LEON_LANG}, valid values are ${envLangValues}\n`)
-      } else if(process.env.LEON_NODE_ENV && envEnvValues.indexOf(process.env.LEON_NODE_ENV) == -1) {
-        log.error(`LEON_NODE_ENV is not a valid value: ${process.env.LEON_NODE_ENV}, valid values are ${envEnvValues}\n`)
-      } else if(process.env.LEON_PORT && typeof(process.env.LEON_PORT) === 'number') {
-        log.error(`LEON_PORT is not a valid value: ${process.env.LEON_PORT}, must be a number\n`)
-      } else if(process.env.LEON_AFTER_SPEECH && typeof(process.env.LEON_AFTER_SPEECH) === 'boolean') {
-        log.error(`LEON_AFTER_SPEECH is not a valid value: ${process.env.LEON_AFTER_SPEECH}, must be a boolean\n`)
-      } else if(process.env.LEON_STT && typeof(process.env.LEON_STT) === 'boolean') {
-        log.error(`LEON_STT is not a valid value: ${process.env.LEON_STT}, must be a boolean\n`)
-      } else if(process.env.LEON_STT_PROVIDER && envSttProviderValues.indexOf(process.env.LEON_STT_PROVIDER) == -1) {
-        log.error(`LEON_STT_PROVIDER is not a valid value: ${process.env.LEON_STT_PROVIDER}, valid values are ${envSttProviderValues}\n`)
-      } else if(process.env.LEON_TTS && typeof(process.env.LEON_TTS) === 'boolean') {
-        log.error(`LEON_STT is not a valid value: ${process.env.LEON_STT}, must be a boolean\n`)
-      } else if(process.env.LEON_TTS_PROVIDER && envTtsProviderValues.indexOf(process.env.LEON_TTS_PROVIDER) == -1) {
-        log.error(`LEON_TTS_PROVIDER is not a valid value: ${process.env.LEON_TTS_PROVIDER}, valid values are ${envTtsProviderValues}\n`)
-      } else if(process.env.LEON_LOGGER && typeof(process.env.LEON_LOGGER) === 'boolean') {
-        log.error(`LEON_LOGGER is not a valid value: ${process.env.LEON_LOGGER}, must be a boolean\n`)
+      const env = {
+        lang: process.env.LEON_LANG,
+        node_env: process.env.LEON_NODE_ENV,
+        host: process.env.LEON_HOST,
+        port: process.env.LEON_PORT,
+        after_speech: process.env.LEON_AFTER_SPEECH,
+        stt: process.env.LEON_STT,
+        stt_prov: process.env.LEON_STT_PROVIDER,
+        tts: process.env.LEON_TTS,
+        tts_prov: process.env.LEON_TTS_PROVIDER,
+        logger: process.env.LEON_LOGGER
+      }
+
+      if (env.lang && envLangValues.indexOf(env.lang) === -1) {
+        log.error(`LEON_LANG is not a valid value: ${env.lang}, valid values are ${envLangValues}\n`)
+        report.can_run.v = false
+      } else if (env.node_env && envEnvValues.indexOf(env.node_env) === -1) {
+        log.error(`LEON_NODE_ENV is not a valid value: ${env.node_env}, valid values are ${envEnvValues}\n`)
+        report.can_run.v = false
+      } else if (typeof env.port === 'number') {
+        log.error(`LEON_PORT is not a valid value: ${env.port}, must be a number\n`)
+        report.can_run.v = false
+      } else if (typeof env.after_speech === 'boolean') {
+        log.error(`LEON_AFTER_SPEECH is not a valid value: ${env.after_speech}, must be a boolean\n`)
+        report.can_run.v = false
+      } else if (typeof env.stt === 'boolean') {
+        log.error(`LEON_STT is not a valid value: ${env.stt}, must be a boolean\n`)
+        report.can_run.v = false
+      } else if (env.stt_provider && envSttProviderValues.indexOf(env.stt_provider) === -1) {
+        log.error(`LEON_STT_PROVIDER is not a valid value: ${env.stt_provider},
+                   valid values are ${envSttProviderValues}\n`)
+        report.can_run.v = false
+      } else if (typeof env.tts === 'boolean') {
+        log.error(`LEON_STT is not a valid value: ${env.stt}, must be a boolean\n`)
+        report.can_run.v = false
+      } else if (env.tts_provide && envTtsProviderValues.indexOf(env.tts_provider) === -1) {
+        log.error(`LEON_TTS_PROVIDER is not a valid value: ${env.tts_provider},
+                   valid values are ${envTtsProviderValues}\n`)
+        report.can_run.v = false
+      } else if (typeof env.logger === 'boolean') {
+        log.error(`LEON_LOGGER is not a valid value: ${env.logger}, must be a boolean\n`)
+        report.can_run.v = false
       } else {
         log.success('Found and valid\n')
+        report.can_run.v = true
       }
     }
 
