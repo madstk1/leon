@@ -1,0 +1,10 @@
+{
+  "hass": {
+    "turned_on_device": [
+      ""
+    ],
+    "device_not_provided": [
+      ""
+    ]
+  }
+}

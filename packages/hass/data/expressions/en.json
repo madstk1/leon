@@ -1,0 +1,52 @@
+{
+  "hass": {
+    "power_on": {
+      "expressions": [
+        "Turn on x",
+        "Turn on my x",
+        "Power on x",
+        "Power on my x"
+      ],
+      "entities": [
+        {
+          "type": "trim",
+          "name": "device",
+          "conditions": [
+            {
+              "type": "after",
+              "from": "on"
+            },
+            {
+              "type": "after",
+              "from": "my"
+            }
+          ]
+        }
+      ]
+    },
+    "power_off": {
+      "expressions": [
+        "Turn off x",
+        "Turn off my x",
+        "Power off x",
+        "Power off my x"
+      ],
+      "entities": [
+        {
+          "type": "trim",
+          "name": "device",
+          "conditions": [
+            {
+              "type": "after",
+              "from": "off"
+            },
+            {
+              "type": "after",
+              "from": "my"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

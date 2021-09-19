@@ -1,0 +1,21 @@
+{
+  "hass": {
+    "power_on": {
+      "expressions": [
+        ""
+      ],
+      "entities": [
+        {
+          "type": "trim",
+          "name": "device",
+          "conditions": [
+            {
+              "type": "after",
+              "from": ""
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

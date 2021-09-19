@@ -1,0 +1,21 @@
+{
+  "hass": {
+    "turned_on_device": [
+      "Alright, I've turned on %device%.",
+      "Okay, %device% is now on."
+    ],
+    "turned_off_device": [
+      "Alright, I've turned off %device%.",
+      "Okay, %device% is now off."
+    ],
+    "key_not_provided": [
+      "No API key was provided for Home Assistant."
+    ],
+    "device_not_provided": [
+      "No device was provided."
+    ],
+    "connection_failed": [
+      "Connection failed with code %code%."
+    ]
+  }
+}
