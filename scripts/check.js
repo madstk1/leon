@@ -20,8 +20,9 @@ export default () => new Promise(async (resolve, reject) => {
     const envLangValues = ['en-US', 'fr-FR']
     const envEnvValues = ['development', 'testing', 'production']
     const envSttProviderValues = ['deepspeech', 'google-cloud-stt', 'watson-stt']
-    const envTtsProviderValues = ['flite', 'amazon-polly', 'google-cloud-tts', 'watson-tts']
+    const envTtsProviderValues = ['flite', 'mimic', 'amazon-polly', 'google-cloud-tts', 'watson-tts']
     const flitePath = 'bin/flite/flite'
+    const mimicPath = 'bin/mimic-v1'
     const deepSpeechPath = 'bin/deepspeech/lm.binary'
     const amazonPath = 'server/src/config/voice/amazon.json'
     const googleCloudPath = 'server/src/config/voice/google-cloud.json'
@@ -35,7 +36,8 @@ export default () => new Promise(async (resolve, reject) => {
       can_amazon_polly_tts: { title: 'Amazon Polly text-to-speech', type: 'warning', v: true },
       can_google_cloud_tts: { title: 'Google Cloud text-to-speech', type: 'warning', v: true },
       can_watson_tts: { title: 'Watson text-to-speech', type: 'warning', v: true },
-      can_offline_tts: { title: 'Offline text-to-speech', type: 'warning', v: true },
+      can_offline_flite: { title: 'Flite text-to-speech', type: 'warning', v: true },
+      can_offline_mimic: { title: 'Mimic text-to-speech', type: 'warning', v: true },
       can_google_cloud_stt: { title: 'Google Cloud speech-to-text', type: 'warning', v: true },
       can_watson_stt: { title: 'Watson speech-to-text', type: 'warning', v: true },
       can_offline_stt: { title: 'Offline speech-to-text', type: 'warning', v: true }
@@ -213,12 +215,20 @@ export default () => new Promise(async (resolve, reject) => {
       log.warning(`Watson TTS is not yet configured: ${e}\n`)
     }
 
-    log.info('Offline TTS')
+    log.info('Flite TTS')
     if (!fs.existsSync(flitePath)) {
-      report.can_offline_tts.v = false
+      report.can_offline_flite.v = false
       log.warning(`Cannot find ${flitePath}. You can setup the offline TTS by running: "npm run setup:offline-tts"\n`)
     } else {
       log.success(`Found Flite at ${flitePath}\n`)
+    }
+
+    log.info('Mimic TTS')
+    if (!fs.existsSync(mimicPath)) {
+      report.can_offline_mimic.v = false
+      log.warning(`Cannot find ${mimicPath}. You can setup the offline TTS by running: "npm run setup:offline-tts"\n`)
+    } else {
+      log.success(`Found Mimic at ${mimicPath}\n`)
     }
 
     log.info('Watson STT')

@@ -9,6 +9,7 @@ class Tts {
     this.provider = provider
     this.providers = [
       'flite',
+      'mimic',
       'google-cloud-tts',
       'amazon-polly',
       'watson-tts'
