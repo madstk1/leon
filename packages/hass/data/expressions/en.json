@@ -18,6 +18,10 @@
             },
             {
               "type": "after",
+              "from": "the"
+            },
+            {
+              "type": "after",
               "from": "my"
             }
           ]
@@ -39,6 +43,10 @@
             {
               "type": "after",
               "from": "off"
+            },
+            {
+              "type": "after",
+              "from": "the"
             },
             {
               "type": "after",
