@@ -8,36 +8,45 @@ from requests import Request, Session
 def power_on(string, entities):
     """Power on device, via Home Assistant"""
 
-    if not utils.config('apikey'):
-        return utils.output('end', 'key_not_provided', utils.translate('key_not_provided'))
+    valid_err = handle_validity(string, entities)
+    if not valid_err == None:
+        return valid_err
 
     device = get_device_from_entities(entities)
-
     if not device:
         return utils.output('end', 'device_not_provided', utils.translate('device_not_provided'))
 
-    res = post_data_to_hass({ "action": "turn on", "device": device.lower() })
-    if not res == 200:
-        return utils.output('end', 'connection_failed', utils.translate('connection_failed', { 'code': res }))
-
-    return utils.output('end', 'turned_on_device', utils.translate('turned_on_device', { 'device': device }))
+    return post_power_data_to_hass('turn on', 'turned_on_device', device.lower())
 
 def power_off(string, entities):
     """Power off device, via Home Assistant"""
 
-    if not utils.config('apikey'):
-        return utils.output('end', 'key_not_provided', utils.translate('key_not_provided'))
+    valid_err = handle_validity(string, entities)
+    if not valid_err == None:
+        return valid_err
 
     device = get_device_from_entities(entities)
-
     if not device:
         return utils.output('end', 'device_not_provided', utils.translate('device_not_provided'))
 
-    res = post_data_to_hass({ "action": "turn off", "device": device.lower() })
+    return post_power_data_to_hass('turn off', 'turned_off_device', device.lower())
+
+def handle_validity(string, entities):
+    """Check for configuration/string/entity validity"""
+
+    if not utils.config('apikey'):
+        return utils.output('end', 'key_not_provided', utils.translate('key_not_provided'))
+
+    return None
+
+def post_power_data_to_hass(action, output_code, device):
+    """Post power-action payload to Home Assistant"""
+
+    res = post_data_to_hass({ "action": action, "device": device })
     if not res == 200:
         return utils.output('end', 'connection_failed', utils.translate('connection_failed', { 'code': res }))
 
-    return utils.output('end', 'turned_off_device', utils.translate('turned_off_device', { 'device': device }))
+    return utils.output('end', output_code, utils.translate(output_code, { 'device': device }))
 
 def post_data_to_hass(payload):
     """Post data payload to Home Assistant"""
@@ -65,6 +74,8 @@ def post_data_to_hass(payload):
     return resp.status_code
 
 def get_device_from_entities(entities):
+    """Get first device from entities"""
+
     for item in entities:
         if item['entity'] == 'device':
             return item['sourceText']
